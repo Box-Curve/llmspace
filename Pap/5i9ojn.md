@@ -612,3 +612,60 @@ Given the strategic significance and the operational impact of the proposed tran
 **V. Conclusion**
 
 The full integration of all SOC tiers into ServiceNow SIR presents a pivotal step towards optimizing SOC operations. The proposed integration will not only provide more streamlined workflows and a comprehensive set of performance metrics, but also foster improved collaboration and a richer, more context-aware environment for incident investigation and response. By committing to continuous improvement and efficiency gains, we can ensure that our SOC continues to meet the evolving demands of the cybersecurity landscape. Our partners have also expressed positive support for this change, further emphasizing the strategic significance of this transition. By moving forward with this integration, we are reaffirming our commitment to maintaining a robust and resilient security posture for our organization.
+
+> Add bullet point six on enabling shifting left, briefly summarise what that means and highlight how unifying all tiers in servicenow will anable this through the introdcution of automated workflows and actions through SOAR
+
+Title: Comprehensive SOC Integration into ServiceNow Security Incident Response (SIR): A Strategic Recommendation
+
+**Executive Summary**
+
+This strategic recommendation proposes a significant shift in our Security Operation Centre (SOC) operations—integrating all SOC tiers into the ServiceNow Security Incident Response (SIR) platform. This move promises numerous benefits including operational efficiency, improved incident management, enhanced partner collaboration, and unified performance evaluation. Post full integration of Sentinel and SIR, anticipated to be live by July 2023, all SOC tiers are recommended to adopt SIR as the primary portal for incident response. The shift towards SIR is also a step towards enabling "shifting left," an approach focused on preventative security measures and early detection to mitigate potential threats.
+
+---
+
+**I. Introduction**
+
+In the ever-evolving cyber threat landscape, the capability of our Security Operations Centre (SOC) to rapidly identify, investigate, and respond to incidents is pivotal to our organization's security posture. As part of our ongoing efforts to enhance SOC performance and incident response, we propose a significant operational transition: the comprehensive integration of all SOC tiers into ServiceNow Security Incident Response (SIR). This paper delineates the rationale, potential benefits, and the proposed transition plan for this strategic integration.
+
+**II. Current SOC Configuration and the Need for Integration**
+
+Presently, the SOC Tier 1 team works exclusively out of Sentinel, while Tier 2 is transitioning towards SIR and Tier 3 manually manages incidents within SIR. This disparate configuration limits cross-tier visibility and collaboration, leading to potential inefficiencies in incident response. Integrating all SOC tiers into a singular platform, such as SIR, will facilitate seamless communication, enhanced visibility, and improved coordination amongst the tiers. Furthermore, the anticipated full integration of Sentinel into SIR by July 2023 underscores the potential benefits of adopting SIR as the primary portal for incident response.
+
+**III. Advantages of Full Integration into SIR**
+
+The strategic move to SIR promises several significant benefits:
+
+1.  **Contextual Understanding of Enterprise Incidents:** Full integration provides SOC analysts at all tiers with a comprehensive view of changes and non-security incidents within the organization. Such an understanding allows for improved correlation analysis, providing a fuller context for all levels of investigation and thereby enhancing threat identification and response effectiveness.
+    
+2.  **Enhanced Automated Workflows:** SIR’s advanced capabilities in automating workflows will be accessible to all SOC tiers. Analysts will have full visibility and control over the incident response process, resulting in more effective and efficient responses.
+    
+3.  **Collaboration and Communication:** SIR’s design allows for better communication and collaboration between SOC tiers and with partners. Real-time sharing of incident data enables quicker and more coordinated responses, and joint decision-making processes become more efficient.
+    
+4.  **Unified Metrics and Performance Evaluation:** Consolidating SOC operations within a singular platform facilitates the generation of end-to-end metrics. These metrics provide a comprehensive view of SOC performance, supporting better performance evaluation, benchmarking, and ultimately strategic decision making.
+    
+5.  **Standardized Practices:** By consolidating all SOC tiers within SIR, SOC operations can leverage the platform's capabilities for standardized practices, leading to further operational efficiency gains.
+    
+6.  **Enabling "Shifting Left":** A significant benefit of integrating into SIR is the facilitation of the "shifting left" strategy. In cybersecurity, "shifting left" refers to the practice of focusing on preventative security measures and early threat detection, rather than just dealing with incidents after they occur. This approach can result in significant cost savings and reduction in security risks. The automated workflows and actions provided by SIR's Security Orchestration, Automation, and Response (SOAR) capabilities are instrumental in enabling this shift.
+    
+
+**IV. Transition Plan**
+
+Given the strategic significance and the operational impact of this integration, a steady and phased transition is recommended, beginning with testing in June 2023. Upon successful testing and necessary adjustments, we propose a full launch of the integrated system by August 1, 2023.
+
+This strategic move has been positively supported by our partners and is anticipated to further enhance the effectiveness of our joint cybersecurity efforts. In alignment with our goal to bolster the organization's security posture, we are confident that integrating all SOC tiers into SIR will be a critical step forward in achieving and maintaining resilience against the evolving cybersecurity threats.
+
+**V. Conclusion**
+
+In conclusion, the full integration of SOC operations into ServiceNow Security Incident Response (SIR) presents a unique opportunity to augment our incident response capabilities, streamline our SOC operations, and foster a proactive approach to cybersecurity. The proposed transition plan ensures a steady and thoughtful integration process, set to fully capitalize on SIR's capabilities and uphold our commitment to robust cybersecurity protection.
+
+> 2 / 2
+> 
+> Expand on point 5 Standardized Practices more
+
+5.  **Standardized Practices:** By consolidating all SOC tiers within SIR, the team can streamline and standardize the incident response process. A unified platform allows for consistent incident reporting, tracking, and resolution across all SOC tiers. It ensures that each incident is handled based on the same standardized protocols, regardless of the tier or analyst managing the incident. This eliminates the chances of information loss or misinterpretation that can occur when incidents are escalated from one tier to another. Furthermore, it allows the organization to maintain a consistently high quality of response, regardless of the complexity or severity of the security incident.
+
+Standardized practices also enable better training of SOC analysts. With a single system in use, training can be consistent and efficient, reducing the learning curve for new analysts. It ensures all analysts, regardless of tier, are familiar with the same processes, tools, and systems, leading to improved collaboration and communication.
+
+Additionally, using a single, unified platform like SIR for all SOC tiers allows for better auditing and compliance. With all incidents being managed in a standardized manner on a single platform, it becomes easier to audit incident response activities, demonstrate compliance with various regulations, and identify areas for improvement.
+
+Lastly, standardized practices also enhance transparency and accountability. Every incident, action, and decision can be traced and tracked within the system, ensuring accountability at all stages of the incident response process. This further reinforces the effectiveness and reliability of our SOC operations.
