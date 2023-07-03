@@ -19,18 +19,36 @@
 "In an effort to optimize our Security Operations Center (SOC) and drive operational efficiency, we have examined the potential of two leading platforms: ServiceNow Security Incident Response (SIR) and Microsoft Sentinel. The goal is to streamline our incident response process, leverage automation wherever feasible, and provide a single pane of glass for our SOC analysts. This brief provides a comparison of these two platforms with an emphasis on their integration with existing infrastructure, their capacity to drive automated workflows, and their potential to fit seamlessly into our operational model. Through this analysis, we aim to facilitate an informed decision on the best approach for our organization."
 
 
-Incident Detection: Sentinel detects a security incident based on defined rules and generates an alert.
-SOAR Activation: Sentinel triggers a Power App via Logic Apps as part of its Security Orchestration, Automation, and Response (SOAR) process.
-Power App Execution: The Power App executes the defined task, such as gathering additional data, isolating a system, or disabling a user account.
-ServiceNow Integration: Once the Power App task is complete, it sends a signal back to Sentinel.
-Change Creation: Sentinel, upon receiving the signal, communicates with ServiceNow via API or a pre-built connector to create a change request.
-Change Management: The change request undergoes the defined workflow in ServiceNow for review, approval, implementation, and closure.
+> descripbe the simple steps of sentinel triggering a soar action with a power app and trigering a change creation task in servicenow. do this in bullet for for a presentation. keep it very brief
 
+1.  **Incident Detection**: Sentinel detects a security incident based on defined rules and generates an alert.
+    
+2.  **SOAR Activation**: Sentinel triggers a Power App via Logic Apps as part of its Security Orchestration, Automation, and Response (SOAR) process.
+    
+3.  **Power App Execution**: The Power App executes the defined task, such as gathering additional data, isolating a system, or disabling a user account.
+    
+4.  **ServiceNow Integration**: Once the Power App task is complete, it sends a signal back to Sentinel.
+    
+5.  **Change Creation**: Sentinel, upon receiving the signal, communicates with ServiceNow via API or a pre-built connector to create a change request.
+    
+6.  **Change Management**: The change request undergoes the defined workflow in ServiceNow for review, approval, implementation, and closure.
+    
 
-Incident Detection: Sentinel detects a security incident based on defined rules and sends an alert to ServiceNow SIR.
-Incident Ingestion: ServiceNow SIR ingests the alert and creates an incident ticket.
-SOAR Activation: ServiceNow SIR, as part of its Security Orchestration, Automation, and Response (SOAR), triggers the defined workflow associated with the incident type.
-Automated Action Execution: The workflow executes the defined tasks, such as gathering additional data, isolating a system, or disabling a user account.
-Change Creation: If the workflow determines a change is needed, it automatically creates a change request within ServiceNow.
-Change Management: The change request undergoes the defined workflow in ServiceNow for review, approval, implementation, and closure.
+Please note, these are simplified steps and the actual process may involve additional steps or variations depending on your specific configuration and requirements.
+
+> now do the same but use SIR as the promary SOAR
+
+1.  **Incident Detection**: Sentinel detects a security incident based on defined rules and sends an alert to ServiceNow SIR.
+    
+2.  **Incident Ingestion**: ServiceNow SIR ingests the alert and creates an incident ticket.
+    
+3.  **SOAR Activation**: ServiceNow SIR, as part of its Security Orchestration, Automation, and Response (SOAR), triggers the defined workflow associated with the incident type.
+    
+4.  **Automated Action Execution**: The workflow executes the defined tasks, such as gathering additional data, isolating a system, or disabling a user account.
+    
+5.  **Change Creation**: If the workflow determines a change is needed, it automatically creates a change request within ServiceNow.
+    
+6.  **Change Management**: The change request undergoes the defined workflow in ServiceNow for review, approval, implementation, and closure.
+    
+
 Please note, these are simplified steps and the actual process may involve additional steps or variations depending on your specific configuration and requirements.
