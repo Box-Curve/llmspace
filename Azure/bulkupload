@@ -1,104 +1,57 @@
+# User Input
+$ServiceNowUrl = Read-Host -Prompt 'Enter the ServiceNow URL'
+$Username = Read-Host -Prompt 'Enter your ServiceNow username'
+$Password = Read-Host -Prompt 'Enter your ServiceNow password' -AsSecureString
+$CSVPath = Read-Host -Prompt 'Enter the full path to the CSV file'
+$LogPath = Read-Host -Prompt 'Enter the full path where the log file will be saved'
 
-```powershell
-# Ask for ServiceNow URL, username, password, CSV file location, and log file location
-$ServiceNowURL = Read-Host -Prompt "Enter the ServiceNow URL"
-$username = Read-Host -Prompt "Enter your ServiceNow username"
-$password = Read-Host -Prompt "Enter yur ServiceNow password" -AsSecureString
-$csvFilePath = Read-Host -Prompt "Enter the full path to the CSV file"
-$logPath = Read-Host -Prompt "Enter the full path where the log file should be saved"
+# Convert secure password to plain text (WARNING: handle with care)
+$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password)
+$Password = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
 
-# Log function to write messages to the log file
-function Write-Log {
-    param (
-        [string]$Message
-    )
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    Add-Content -Path $logPath -Value "$timestamp - $Message"
-}
+# Read CSV File
+$records = Import-Csv -Path $CSVPath
 
-# Convert the SecureString password to plain text
-$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password)
-$plainPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+# Initialize log
+Set-Content -Path $LogPath -Value "TargetRecord_sysID, FilePath, NewLocation, StatusCode, Response`r`n"
 
-# Create base64 authentication header
-$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("${username}:${plainPassword}")))
+foreach ($record in $records) {
+    # Prepare multipart/form-data boundary
+    $boundary = [System.Guid]::NewGuid().ToString()
+    $LF = "`r`n"
 
-# Import the CSV file
-$csvData = Import-Csv -Path $csvFilePath
+    # Prepare file content
+    $fileContent = Get-Content -Path $record.FilePath -Encoding Byte
+    $fileHeader = "--$boundary$LF" +
+                  "Content-Disposition: form-data; name=`"uploadFile`"; filename=`"$(Split-Path $record.FilePath -Leaf)`"$LF" +
+                  "Content-Type: application/octet-stream$LF$LF"
 
-# Loop through each row in the CSV
-foreach ($row in $csvData) {
+    $fileFooter = "$LF--$boundary--$LF"
+
+    # Prepare body
+    $body = [System.Text.Encoding]::ASCII.GetBytes($fileHeader) + $fileContent + [System.Text.Encoding]::ASCII.GetBytes($fileFooter)
+
+    # Create headers
+    $headers = @{
+        "Authorization" = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$Username:$Password"))
+        "Content-Type" = "multipart/form-data; boundary=$boundary"
+    }
+
     try {
-        # Extract data from the current row
-        $TargetRecord_sysID = $row.TargetRecord_sysID
-        $FilePath = $row.FilePath
+        # Make API call
+        $response = Invoke-RestMethod -Uri "$ServiceNowUrl/api/now/attachment/upload" -Method Post -Headers $headers -Body $body
 
-        # Prepare headers and parameters
-        $headers = @{
-            "Authorization" = "Basic $base64AuthInfo"
-            "Content-Type" = "multipart/form-data"
-        }
+        # Parse response
+        $newLocation = $response.result.sys_id
+        $statusCode = 200
+        $responseBody = $response | ConvertTo-Json
 
-        $params = @{
-            "table_name" = "incident"
-            "table_sys_id" = $TargetRecord_sysID
-            "uploadFile" = Get-Content $FilePath
-        }
-
-        # Make the API call
-        $response = Invoke-WebRequest -Uri "$ServiceNowURL/api/now/attachment/upload" -Method Post -Headers $headers -Body $params
-
-        # Update CSV with API response
-        $row.NewLocation = $response.Headers["Location"]
-        $row.StatusCode = $response.StatusCode
-        $row.Response = $response.Content
-
-        Write-Log "Successfully processed $FilePath for record $TargetRecord_sysID."
+    } catch {
+        $newLocation = "Error"
+        $statusCode = $_.Exception.Response.StatusCode.Value__
+        $responseBody = $_.Exception.Message
     }
-    catch {
-        Write-Log "Error processing $FilePath for record $TargetRecord_sysID. Error Details: $_"
-        $row.StatusCode = "ERROR"
-        $row.Response = $_.Exception.Message
-    }
+
+    # Write log
+    Add-Content -Path $LogPath -Value "$($record.TargetRecord_sysID), $($record.FilePath), $newLocation, $statusCode, $responseBody"
 }
-
-# Export the updated CSV
-$csvData | Export-Csv -Path $csvFilePath -NoTypeInformation
-Write-Log "Processing complete. CSV updated."
-```
-
-### Explanation of the Change
-
-### 1.  **Log File Location**: I added a `Read-Host` prompt to ask the user where the log file should be saved. The path is stored in the `$logPath` variable and is used by the `Write-Log` function.
-
-### With this change, the script now also asks for the log file path before executing. This allows you to dynamically specify where the log file will be saved.
-### 
-
-### The code provided was meant to illustrate a possible approach and may require debugging and modification to be fully functional in your specific environment. That being said, there are some potential issues in the original code that could cause problems:
-### 
-### 1.  **Content-Type**: The `Invoke-WebRequest` method might not handle `multipart/form-data` very well with the `-Body` parameter. You may need to construct the body manually or use another library to deal with file uploads.
-###     
-### 2.  **Password Decryption**: Converting a SecureString to plain text is not recommended for security reasons. Try to use it in its secure form if possible.
-###     
-### 3.  **Response Headers**: Not all HTTP responses contain a `Location` header. The code should check if the header exists before attempting to access it.
-###     
-### 4.  **File Validation**: The code doesn't currently check if the specified file in `$FilePath` exists before trying to read it.
-###     
-### 5.  **CSV Update**: The code updates `$row` within the loop, but that won't necessarily update `$csvData`. This means that the export at the end may not include the updates you made while iterating over `$csvData`.
-###     
-### 6.  **Authorization Header**: The code uses Basic authentication, which is not the most secure method. If ServiceNow supports it, OAuth is generally a better option.
-###     
-### 7.  **Logging**: `Write-Log` function will append logs but there is no mechanism to ensure that the log file's directory exists.
-###     
-### 8.  **Error Handling**: There are minimal try/catch blocks, and it would be wise to include more specific error handling depending on the operation.
-###     
-### 9.  **Rate Limiting**: If you're planning to upload thousands of files, be aware of any rate-limiting on ServiceNow's end.
-###     
-### 10.  **Log File Writing**: Depending on how quickly the loop iterates, you may encounter issues with attempting to write to the log file too quickly. You may need a more robust logging mechanism.
-###     
-### 11.  **Read-Host for Password**: Using `Read-Host` for password input in a plaintext manner is not secure for a production environment. Use secure methods to store and retrieve passwords.
-###     
-### 12.  **API Endpoint**: The ServiceNow URL is hard-coded in the `Invoke-WebRequest` command. It should ideally be variable.
-###     
-### 
-### Please note that some of these issues are more about best practices and edge cases rather than outright bugs. Each of these points would need to be considered and addressed to create a robust, production-ready script.
