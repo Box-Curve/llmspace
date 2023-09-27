@@ -1,96 +1,112 @@
 /**
- * Function to check the log status of all Configuration Items (CIs) in Sentinel.
+ * Function to get an access token using OAuth.
+ *
+ * @returns {string} The access token.
  */
-function checkLogStatuses() {
+async function getAccessToken() {
+    // Create a new OAuth2 client.
+    const oauth2Client = new OAuth2Client({
+      clientId: $API_Client_ID,
+      clientSecret: $API_Client_Secret,
+      tenantId: $API_Tenant_ID,
+      authUri: $API_Identity_URL,
+      tokenUri: $API_Identity_URL + '/oauth2/v2.0/token',
+    });
   
-    // Hypothetical function to dynamically retrieve the token to authenticate API requests.
-    // Ensures secure and dynamic token retrieval.
-    var accessToken = getAccessToken(); 
-    
-    // Hypothetical function to retrieve the lookup table that maps CI names in ServiceNow to device names in Sentinel.
-    // Ensures proper mapping between ServiceNow CIs and Sentinel devices.
-    var lookupTable = getLookupTable(); 
-    
-    // Creating a new instance of RESTMessageV2 to handle outbound REST messages to Sentinel's API.
-    var restMessage = new sn_ws.RESTMessageV2();
-    
-    // Setting the endpoint URL to Sentinel's API endpoint to get data related to devices.
-    restMessage.setEndpoint('https://api.loganalytics.io/v1/workspaces/' + YOUR_SENTINEL_WORKSPACE_ID + '/query');
-    
-    // Setting the HTTP method to POST to send the query to Sentinel's API.
-    restMessage.setHttpMethod('POST');
-    
-    // Setting the Authorization header with the retrieved access token for authenticating to Sentinel's API.
-    restMessage.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-    
-    // Constructing the Kusto Query Language (KQL) query to fetch the full list of devices from Sentinel
-    // with their current status and the timestamp of the last log received.
-    // It joins the device list with the lookup table to map the CI names in ServiceNow.
-    var listQuery = "SELECT LookupTable.`CI Name`, CommonSecurityLog.TimeGenerated, CommonSecurityLog.Status " +
-                    "FROM CommonSecurityLog " +
-                    "JOIN LookupTable ON CommonSecurityLog.ComputerName = LookupTable.`Device Name`";
-    
-    // Setting the constructed KQL query as the request body in JSON format.
-    restMessage.setRequestBody(JSON.stringify({ "query": listQuery }));
-    
-    // Executing the API request to Sentinel and storing the response.
-    var response = restMessage.execute();
-    
-    // Getting the HTTP status code of the response to check the success of the API request.
-    var httpStatus = response.getStatusCode();
-    
-    // Parsing the JSON response body to extract the list of devices and their data.
-    var responseBody = JSON.parse(response.getBody());
-    
-    // Checking the HTTP status and if there are any errors in the response body.
-    // Logging any errors and stopping the execution of the function if errors are found.
-    if (httpStatus !== 200 || responseBody.error)
-
-    {
-    // Constructing an error message based on the received error in the response body, if available, 
-    // else setting a default error message.
-    var errorMsg = (responseBody.error && responseBody.error.message) ? responseBody.error.message : 'API request failed';
-    
-    // Logging the constructed error message along with the received HTTP status code for debugging purposes.
-    gs.error('Error: ' + errorMsg + '. HTTP Status Code: ' + httpStatus);
-    
-    // Exiting the function early due to the error, preventing further execution.
-    return;
+    // Get the access token.
+    const accessToken = await oauth2Client.getAccessToken({
+      scope: $API_Azure_Resource_Manager,
+    });
+  
+    return accessToken;
   }
-
-  // Checking the existence and length of the 'value' array in the response body, 
-  // which supposedly holds the list of devices and their details.
-  if (!responseBody.value || responseBody.value.length === 0) {
-    
-    // Logging a warning message if no device details are found in the response body.
-    gs.warn('No device details returned from Sentinel.');
-    
-    // Exiting the function early due to lack of data, preventing further processing.
-    return;
+  
+  /**
+   * Function to check the log status of all Configuration Items (CIs) in Sentinel.
+   */
+  async function checkLogStatuses() {
+    try {
+      // Get the access token and lookup table.
+      const accessToken = await getAccessToken();
+      const lookupTable = await getLookupTable();
+  
+      // Create a new RESTMessageV2 object.
+      const restMessage = new sn_ws.RESTMessageV2();
+  
+      // Set the endpoint URL and HTTP method.
+      restMessage.setEndpoint('https://api.loganalytics.io/v1/workspaces/' + WORKSPACE_ID + '/query');
+      restMessage.setHttpMethod('POST');
+  
+      // Set the Authorization header.
+      restMessage.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+  
+      // Construct the KQL query.
+      const listQuery = `
+          SELECT LookupTable.\`CI Name\`, CommonSecurityLog.TimeGenerated, CommonSecurityLog.Status
+          FROM CommonSecurityLog
+          JOIN LookupTable ON CommonSecurityLog.ComputerName = LookupTable.\`Device Name\`;
+      `;
+  
+      // Set the request body.
+      restMessage.setRequestBody(JSON.stringify({ "query": listQuery }));
+  
+      // Execute the API request and get the response.
+      const response = await restMessage.execute();
+  
+      // Check the HTTP status code and parse the response body.
+      const httpStatus = response.getStatusCode();
+      const responseBody = JSON.parse(response.getBody());
+  
+      // Handle errors.
+      if (httpStatus !== 200 || responseBody.error) {
+        const errorMsg = responseBody.error?.message || 'API request failed';
+        logger.error(`Error: ${errorMsg}. HTTP Status Code: ${httpStatus}`);
+        return;
+      }
+  
+      // Handle empty response.
+      if (!responseBody.value || !responseBody.value.length) {
+        logger.warn('No device details returned from Sentinel.');
+        return;
+      }
+  
+      // Iterate over the device list and handle each device info.
+      responseBody.value.forEach(async function(device) {
+        try {
+          const { ['CI Name']: ciName, Status: status, TimeGenerated: lastLogReceivedTime } = device;
+  
+          // More modular and detailed logic for handling each device
+          await handleDeviceInfo(ciName, status, lastLogReceivedTime, lookupTable);
+        } catch (error) {
+          logger.error(`Unexpected error occurred while handling device info for CI ${ciName}: `, error);
+        }
+      });
+    } catch (error) {
+      logger.error('Unexpected error occurred: ', error);
+    }
   }
-   // Iterating over each item (device details) in the 'value' array of the response body.
-  responseBody.value.forEach(function(device) {
-    
-    // Extracting the CI Name, Status, and TimeGenerated (timestamp of the last log received) 
-    // from each item (device details).
-    var ciName = device['CI Name'];
-    var status = device.Status;
-    var lastLogReceivedTime = device.TimeGenerated;
-    
-    // Performing appropriate actions, comparisons, updates, and notifications based on extracted data.
-    // For example, generating alerts if the status is undesirable, or if the last log received is older than a certain threshold.
-    // Actual implementation will depend on specific requirements and logic.
-
-    // Matching each device against ServiceNow CI records locally, and updating the CI records as necessary.
-    // For instance, comparing 'ciName' with names of CI records in ServiceNow and updating the matched CI record's status and last log received time.
-    
+  
+  /**
+   * Function to handle the device info for a given CI.
+   *
+   * @param {string} ciName The name of the CI.
+   * @param {string} status The status of the CI.
+   * @param {string} lastLogReceivedTime The last time a log was received from the CI.
+   * @param {object} lookupTable The lookup table.
+   */
+  async function handleDeviceInfo(ciName, status, lastLogReceivedTime, lookupTable) {
+    // Specific actions, comparisons, updates, notifications logic here
+    // More detailed and granular logging
+  
+    // For example, you could log the following messages:
+    logger.info(`Processing device info for CI ${ciName}`);
+    logger.info(`CI status: ${status}`);
+    logger.info(`Last log received time: ${lastLogReceivedTime}`);
     // ...
-    // Implement required logic for each device detail here.
+    // Implement required logic here.
     // ...
-    
-  });
-
-}
-
-// Calling the checkLogStatuses() function to initiate the process.
-checkLogStatuses();
+  }
+  
+  // Initiate the process
+  checkLogStatuses();
+  
