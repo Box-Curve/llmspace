@@ -1,35 +1,34 @@
-### Summary
+### Summary:
 
-Within the established landing zone, there is a distinction between subscriptions managed by the Cloud Centre of Excellence (CCOE) and those owned and managed by various other departments within ZZZ Bank. Managed Subscriptions are integral, containing core resources that the CCOE directly manages and supports, providing services essential for the functioning of subscriptions owned by other departments. These provisions follow the hub-and-spoke pattern, ensuring optimized functionality and streamlined management.
+Subscriptions, which are directly managed by the owners, form the other critical component of the Landing Zone. The creation of such subscriptions is executed by the CCOE to ensure adherence to organizational standards and policies. Once created, the management and maintenance of these subscriptions primarily fall under the Subscription Owner’s purview. However, other departments like ZZZ Security Team and ZZZ Architecture also play pivotal roles in specific tasks, ensuring alignment with organizational security and architectural standards.
 
-### Description
+### Description:
 
-In the hub-and-spoke model:
+In owner-managed subscriptions:
+- **Subscription Creation:** Executed by the CCOE, it establishes the baseline for subscription set-up, maintaining consistency and adherence to the organizational framework.
+- **Subscription Management:** Primarily overseen by the Subscription Owner, it involves the management and maintenance of individual subscriptions, ensuring they meet the specific needs of the departments.
+- **Security and Architecture:** The ZZZ Security Team and ZZZ Architecture are involved in refining and maintaining the security and architectural integrity of the subscriptions, respectively.
 
-- **Hub**: Contains the core services and resources managed and supported by the CCOE. It serves as the central point connecting to multiple spokes.
-- **Spoke**: Consists of subscriptions owned by other departments, leveraging services and resources provided by the hub.
+### RACI for Tasks for Azure Services in Owner-Managed Subscriptions
 
-This delineation ensures centralized management of core services by the CCOE while allowing other departments to have ownership and management of their subscriptions, facilitating an organized and efficient operational framework.
+| Tasks                                    | CCOE ZZZ | CCOE HCL | Subscription Owner | ZZZ Security Team | ZZZ Architecture |
+|------------------------------------------|----------|----------|--------------------|-------------------|------------------|
+| Create Subscriptions                     | A        | I        | R                  | I                 | I                |
+| Manage Subscription Configurations       | I        | C        | A                  | C                 | R                |
+| Implement Security Policies              | I        | I        | C                  | A                 | R                |
+| Oversee Subscription Maintenance         | I        | A        | R                  | C                 | C                |
+| Update and Patch Management              | I        | R        | A                  | C                 | C                |
+| Configure Networking within Subscriptions| I        | C        | A                  | R                 | C                |
+| Monitor Services in Subscriptions       | C        | A        | R                  | C                 | I                |
+| Execute Backup & Recovery                | I        | C        | A                  | R                 | C                |
+| Validate Architectural Integrity         | I        | I        | C                  | C                 | A                |
+| Support and Resolve Issues               | C        | R        | A                  | C                 | I                |
 
-### RACI for Tasks for Azure Services in Managed Subscriptions
-
-| Tasks                                      | CCOE | IT Department | Finance Department | HR Department | Operations Department |
-|--------------------------------------------|------|---------------|--------------------|---------------|-----------------------|
-| Manage Core Services in Hub                | A    | I             | I                  | I             | I                     |
-| Support Core Services in Hub               | R    | I             | I                  | I             | I                     |
-| Manage Departmental Subscriptions (Spoke) | C    | R             | R                  | R             | R                     |
-| Support Departmental Subscriptions (Spoke) | C    | A             | A                  | A             | A                     |
-| Configure Networking between Hub & Spoke   | A    | R             | I                  | I             | I                     |
-| Manage Security Policies in Hub            | A    | C             | I                  | I             | I                     |
-| Update and Patch Management in Hub         | A    | I             | I                  | I             | I                     |
-| Monitor Services in Hub                    | A    | C             | I                  | I             | C                     |
-| Implement Backup & Recovery in Hub         | A    | C             | I                  | I             | C                     |
-
-- **R – Responsible:** The department that performs the execution of the task.
-- **A – Accountable:** The department that is ultimately answerable for the correct and thorough completion of the task.
-- **C – Consulted:** The department that must be consulted before a decision or action is taken.
-- **I – Informed:** The department that must be informed after a decision or action is taken.
+- **R – Responsible:** The entity that executes the task.
+- **A – Accountable:** The entity ultimately answerable for the complete and correct execution of the task.
+- **C – Consulted:** The entity whose opinions are sought; and with whom there is two-way communication.
+- **I – Informed:** The entity that is kept informed of progress and with whom there is one-way communication.
 
 ### Conclusion
 
-This structured approach allows for clear delineation of responsibilities and roles within Azure Services, ensuring seamless interaction and operation between core services and departmental subscriptions. The adherence to the RACI model clarifies the roles and responsibilities amongst various departments in managing and supporting Azure services within the hub-and-spoke pattern, promoting efficiency, clarity, and accountability within the organisational framework.
+This delineation provides a clear outline of responsibilities and tasks within owner-managed subscriptions. The structured RACI model ensures smooth collaboration amongst different departments, clarifying roles, and maintaining the high standard and integrity of Azure services within the subscriptions, aligning with ZZZ Bank’s security and architectural policies. This structured approach promotes optimal functionality, alignment, and compliance within owner-managed subscriptions in the Azure environment.
