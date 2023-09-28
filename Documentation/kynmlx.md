@@ -1,51 +1,46 @@
-### Executive Summary: Service Offering Description
+### Introduction: Service Offering Description
 
-#### Overview
-ZZZ Bank has implemented Azure Sentinel to enhance security log collection from both internal and external sources, reinforcing our security infrastructure. While AWS remains our primary strategic service, the deployment of Azure is designated for specific use-cases, currently focused on enhancing the capabilities of Azure Sentinel for security analytics and threat intelligence.
+ZZZ Bank has established the operation of Azure Sentinel, enhancing the security infrastructure by reinforcing the collection of security logs from a myriad of internal and external sources. This initiative is implemented in alignment with our broader technological strategy, predominantly facilitated through AWS; however, Azure has been selectively integrated to cater to specialised needs. Currently, the focal point is the deployment of Azure Sentinel for refined security analytics and threat intelligence.
 
-#### Architecture and Components
+#### Service Architecture and Components
 
-1. **Azure Sentinel**  
-Azure Sentinel, a cloud-native SIEM and SOAR solution, facilitates advanced security analytics and threat intelligence.
-[Learn More](https://azure.microsoft.com/en-us/services/azure-sentinel/)
+1. **Azure Sentinel:** 
+   This is a sophisticated SIEM and SOAR solution, aiding in the provision of intelligent security analytics and threat intelligence. 
+   [Learn More](https://azure.microsoft.com/en-gb/services/azure-sentinel/)
 
-2. **Hub-and-Spoke Landing Zone**  
-Implemented via Infrastructure as Code (IaC) from Azure DevOps and built with Terraform, this structure is designed for scalability, security, and resilience.
-[Learn More](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/)
+2. **Hub-and-Spoke Landing Zone:** 
+   Developed using Infrastructure as Code (IaC) and Terraform, it ensures a secure, scalable, and resilient service deployment. 
+   [Learn More](https://docs.microsoft.com/en-gb/azure/cloud-adoption-framework/ready/landing-zone/)
 
-3. **ExpressRoute Direct**  
-This service connects ZZZ Bank's data centers to the Azure environment securely and efficiently.
-[Learn More](https://azure.microsoft.com/en-us/services/expressroute/)
+3. **ExpressRoute Direct:** 
+   It connects ZZZ Bank’s data centres to the Azure environment, ensuring secure and efficient data communication. 
+   [Learn More](https://azure.microsoft.com/en-gb/services/expressroute/)
 
-4. **Fortigate Virtual Appliances**  
-Positioned within the hub to secure the network subscription, these appliances offer additional layers of security.
-[Learn More](https://www.fortinet.com/products/next-generation-firewall)
+4. **Fortigate Virtual Appliances:** 
+   Positioned within the hub to fortify the network subscription.
+   [Learn More](https://www.fortinet.com/products/next-generation-firewall)
 
-5. **Syslog Collectors**  
-They are essential for collecting and forwarding security logs to the Log Analytics workspace.
-[Learn More](https://docs.microsoft.com/en-us/azure/sentinel/connect-syslog)
+5. **Syslog Collectors:** 
+   Essential for channelling security logs to the Log Analytics workspace from varied sources. 
+   [Learn More](https://docs.microsoft.com/en-gb/azure/sentinel/connect-syslog)
 
-#### Environments
+#### Operational Environments
 
-1. **Primary Environment**  
-This is the principal operational domain, deployed and configured to ZZZ Bank’s security and operational standards.
+1. **Primary Environment:** 
+   The principal operational area, configured in compliance with ZZZ Bank’s operational and security standards.
 
-2. **Test Environment**  
-This smaller-scale replica of the production environment is in place for validation and optimization before full-scale deployment.
+2. **Test Environment:** 
+   A scaled replica for rigorous testing and optimisation before deployment to the production environment.
 
-#### Operational Framework
+#### Support Framework
 
-ZZZ Bank’s Cloud Centre of Excellence (CCOE) has collaborated with HCL to maintain the operational robustness of this environment during Business as Usual (BAU) phases.
+Our Cloud Centre of Excellence (CCOE) has collaborated with HCL to provide seamless, 24-hour support, ensuring optimal operational continuity in alignment with the current AWS VIP agreement. 
 [Learn More about HCL](https://www.hcltech.com/)
 
-#### Current Utilization
+#### Utilisation and Adaptability
 
-The Azure environment is currently utilized for the deployment of Sentinel and associated log collection infrastructure for security logs exclusively, from both internal and external sources. This specific focus aligns with the bank’s precise requirement for enhanced security log analytics.
+The Azure environment is predominantly utilised for deploying Azure Sentinel and its associated log collection infrastructure, focusing specifically on security logs. While the initial implementation is specific, the architecture is versatile, allowing for adaptations to accommodate varied use-cases in the future as organisational needs evolve.
 
-#### Potential Expansion
+### Conclusion of Introduction
 
-While presently focused on security log collection and analysis, the established environment has the flexibility to accommodate different use-cases if the need arises in the future.
-
-#### Conclusion
-
-This document outlines the Azure Sentinel service offering within ZZZ Bank, highlighting the architectural components, environments, operational support, current utilization, and potential expansions, providing a factual depiction of the service for internal understanding. This implementation, although specific, is an integral part of the bank’s operational and security infrastructure, designed with adaptability to meet evolving requirements.
+This introduction serves to outline the implementation of Azure Sentinel within ZZZ Bank, offering a concise overview of the components, architecture, operational frameworks, and areas of application, serving as an informative reference for internal stakeholders. The established environment, currently designated for specific security-focused applications, is built with the flexibility to adapt and accommodate future organisational requirements and expansions. This introduction precedes further detailed sections providing deeper insights into each component and operational aspect of the service offering.
