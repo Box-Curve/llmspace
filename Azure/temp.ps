@@ -1,0 +1,14 @@
+# Variables
+rg_name=acmeResourceGroup
+location=westeurope
+storage_account_name=acmetfbackend
+container_name=acmetfcontainer
+
+# Create resource group
+az group create --name $rg_name --location $location
+
+# Create storage account
+az storage account create --name $storage_account_name --resource-group $rg_name --location $location --sku Standard_LRS
+
+# Create blob container
+az storage container create --name $container_name --account-name $storage_account_name
